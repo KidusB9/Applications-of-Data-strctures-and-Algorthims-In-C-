@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <unordered_map>
+
+using namespace std;
+
+// Data structure to store scratch card reward
+struct Reward {
+  string rewardType;
+  int rewardAmount;
+};
+
+// Function to add reward to stack
+void addReward(stack<Reward>& rewards, Reward reward) {
+  rewards.emplace(reward);
+  cout << "Added reward: " << reward.rewardType << " - " << reward.rewardAmount << endl;
+}
+
+// Function to redeem rewards
+void redeemRewards(stack<Reward>& rewards, unordered_map<string, int> rewardValues) {
+  cout << "Redeeming rewards..." << endl;
+  int totalReward = 0;
+  while (!rewards.empty()) {
+    auto reward = rewards.top();
+    rewards.pop();
+    if (rewardValues.find(reward.rewardType) != rewardValues.end()) {
+      totalReward += reward.rewardAmount * rewardValues[reward.rewardType];
+    } else {
+      cout << "Invalid reward: " << reward.rewardType << " - " << reward.rewardAmount << endl;
+    }
+  }
+  cout << "Total reward: " << totalReward << endl;
+}
+
+int main() {
+  // Initialize stack to store rewards
+  stack<Reward> rewards;
+
+  // Read in rewards from user
+  while (true) {
+    cout << "Enter reward type (leave blank to stop): ";
+    string rewardType;
+    getline(cin, rewardType);
+    if (rewardType.empty()) {
+      break;
+    }
+
+    cout << "Enter reward amount: ";
+    int rewardAmount;
+    cin >> rewardAmount;
+
+    addReward(rewards, Reward{rewardType, rewardAmount});
+  }
+
+  // Initialize map of reward values
+  unordered_map<string, int> rewardValues = {{"cash", 1}, {"discount", 2}, {"gift card", 3}};
+
+  // Redeem rewards
+  redeemRewards(rewards, rewardValues);
+
+  return 0;
+}
