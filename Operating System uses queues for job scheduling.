@@ -1,0 +1,122 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+// Node structure for queue
+struct Node
+{
+    int id;
+    int priority;
+    Node *next;
+};
+
+// Function to create a new node
+Node* getNewNode(int id, int priority)
+{
+    Node *newNode = new Node;
+    newNode->id = id;
+    newNode->priority = priority;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a new job into the queue
+void insertJob(Node **head, Node **tail, int id, int priority)
+{
+    // Create a new node for the job
+    Node *newNode = getNewNode(id, priority);
+
+    // If the queue is empty, make the new node the head and tail
+    if (*head == NULL)
+    {
+        *head = newNode;
+        *tail = newNode;
+        return;
+    }
+
+    // If the priority of the new job is higher than the head of the queue, insert it at the front
+    if (priority > (*head)->priority)
+    {
+        newNode->next = *head;
+        *head = newNode;
+        return;
+    }
+
+    // Find the correct position for the new job in the queue
+    Node *curr = *head;
+    while (curr->next != NULL && curr->next->priority >= priority)
+        curr = curr->next;
+
+    // Insert the new job into the queue
+    newNode->next = curr->next;
+    curr->next = newNode;
+
+    // If the new job is being inserted at the end of the queue, update the tail pointer
+    if (newNode->next == NULL)
+        *tail = newNode;
+}
+
+// Function to remove the head of the queue (highest priority job)
+void removeJob(Node **head, Node **tail)
+{
+    // If the queue is empty, there is nothing to remove
+    if (*head == NULL)
+        return;
+
+    // Remove the head of the queue
+    Node *temp = *head;
+    *head = (*head)->next;
+
+    // If the queue is now empty, update the tail pointer
+    if (*head == NULL)
+        *tail = NULL;
+
+    delete temp;
+}
+
+// Function to display the current jobs in the queue
+void displayJobs(Node *head)
+{
+    // If the queue is empty, there are no jobs to display
+    if (head == NULL)
+    {
+        cout << "No jobs in the queue" << endl;
+        return;
+    }
+
+    // Display the jobs in the queue
+    cout << "Jobs in the queue: ";
+    Node *curr = head;
+    while (curr != NULL)
+    {
+        cout << "(" << curr->id << ", " << curr->priority << ") ";
+        curr = curr->next;
+    }
+    cout << endl;
+}
+
+int main()
+{
+    Node *head = NULL;
+    Node *tail = NULL;
+
+    // Insert some jobs into the queue
+    insertJob(&head, &tail, 1, 3);
+    insertJob(&head, &tail, 2, 2);
+    insertJob(&head, &tail, 3, 4);
+    insertJob(&head, &tail, 4, 1);
+
+    // Display the current jobs in the queue
+    displayJobs(head);
+
+    // Remove the head of the queue (highest priority job)
+    removeJob(&head, &tail);
+
+    // Display the current jobs in the queue
+    displayJobs(head);
+
+    return 0;
+}
+
