@@ -1,0 +1,65 @@
+//kidus berhanu
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+
+const int NUM_TRIALS = 10000000;
+
+double monteCarloPi(int numTrials) {
+    srand(time(0));
+    int numInside = 0;
+
+    for (int i = 0; i < numTrials; i++) {
+        double x = (double)rand() / RAND_MAX;
+        double y = (double)rand() / RAND_MAX;
+        if (x * x + y * y <= 1) {
+            numInside++;
+        }
+    }
+
+    return 4.0 * numInside / numTrials;
+}
+
+double monteCarloCircleArea(int numTrials) {
+    srand(time(0));
+    int numInside = 0;
+
+    for (int i = 0; i < numTrials; i++) {
+        double x = (double)rand() / RAND_MAX;
+        double y = (double)rand() / RAND_MAX;
+        if (x * x + y * y <= 1) {
+            numInside++;
+        }
+    }
+
+    return (double)numInside / numTrials;
+}
+
+double monteCarloCircleCircumference(int numTrials, double radius) {
+    srand(time(0));
+    int numInside = 0;
+
+    for (int i = 0; i < numTrials; i++) {
+        double x = (double)rand() / RAND_MAX;
+        double y = (double)rand() / RAND_MAX;
+        if (x * x + y * y <= radius * radius) {
+            numInside++;
+        }
+    }
+
+    return 2 * radius * (double)numInside / numTrials;
+}
+
+int main() {
+    double pi = monteCarloPi(NUM_TRIALS);
+    std::cout << "Approximate value of pi: " << pi << std::endl;
+
+    double circleArea = monteCarloCircleArea(NUM_TRIALS);
+    std::cout << "Approximate area of a circle with radius 1: " << circleArea << std::endl;
+
+    double circleCircumference = monteCarloCircleCircumference(NUM_TRIALS, 1);
+    std::cout << "Approximate circumference of a circle with radius 1: " << circleCircumference << std::endl;
+
+    return 0;
+}
