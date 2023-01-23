@@ -1,0 +1,43 @@
+//kidus berhanu
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <iostream>
+#include <string>
+
+std::string encrypt(const std::string &plaintext, const RSA *public_key) {
+    std::string ciphertext(RSA_size(public_key), 0);
+    int encrypted_length = RSA_public_encrypt(plaintext.size(), (const unsigned char *)plaintext.c_str(), (unsigned char *)ciphertext.c_str(), public_key, RSA_PKCS1_OAEP_PADDING);
+    return ciphertext;
+}
+
+std::string decrypt(const std::string &ciphertext, const RSA *private_key) {
+    std::string plaintext(RSA_size(private_key), 0);
+    int decrypted_length = RSA_
+private_decrypt(ciphertext.size(), (const unsigned char *)ciphertext.c_str(), (unsigned char *)plaintext.c_str(), private_key, RSA_PKCS1_OAEP_PADDING);
+return plaintext;
+}
+
+int main() {
+// Generate RSA key pair
+RSA *keypair = RSA_generate_key(2048, 65537, nullptr, nullptr);
+// Extract public key
+BIO *public_key_bio = BIO_new(BIO_s_mem());
+PEM_write_bio_RSAPublicKey(public_key_bio, keypair);
+
+// Extract private key
+BIO *private_key_bio = BIO_new(BIO_s_mem());
+PEM_write_bio_RSAPrivateKey(private_key_bio, keypair, nullptr, nullptr, 0, nullptr, nullptr);
+
+std::string plaintext = "This is a secret message.";
+
+std::string ciphertext = encrypt(plaintext, keypair);
+std::cout << "Ciphertext: " << ciphertext << std::endl;
+
+std::string decrypted = decrypt(ciphertext, keypair);
+std::cout << "Decrypted: " << decrypted << std::endl;
+
+RSA_free(keypair);
+BIO_free(public_key_bio);
+BIO_free(private_key_bio);
+
+return 0;
