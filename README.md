@@ -3,7 +3,7 @@ Cryptography: Implementing RSA, AES and DES algorithms in C++ for secure communi
 N-Queens problem and Sudoku solver using backtracking algorithm.
 A leaderboard for a game using various data structures and algorithms.
 A* algorithm in C++.
-C++ code for spam email detection using application of strings.
+C++ code for spam email detection using application of strings..
 C++ code for creating a media playlist and playing previous and next songs.
 Dijkstra algorithm in C++.
 Advanced online ticket booking system.
