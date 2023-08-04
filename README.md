@@ -9,7 +9,7 @@ C++ code for creating a media playlist and playing previous and next songs.
 Dijkstra algorithm in C++.
 Advanced online ticket booking system.
 Job scheduling in operating systems using queues.
-Process scheduling in C++ kernel.
+Process scheduling in C++ kernel...
 Monte Carlo method for approximating mathematical constants using randomized algorithms.
 Simulation and modeling in various fields using C++.
 Circular linked list implementation in C++ for switching between applications in an operating system.
