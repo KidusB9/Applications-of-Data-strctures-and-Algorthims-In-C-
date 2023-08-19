@@ -4,6 +4,7 @@
 #include <cstring>
 
 using namespace std;
+//
 
 // Node structure for circular linked list
 struct Node
