@@ -6,6 +6,7 @@
 
 const int INF = 1e9;
 
+
 struct Node {
     int x, y;
     int f, g, h;
