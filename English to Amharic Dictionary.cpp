@@ -478,7 +478,7 @@ int main()
 
                 break;
 
-        case 6: cout<<"Thanks for visiting MR.Atanfu. J! ";
+        case 6: cout<<"Thanks for visiting Kidus GITHIB!! ";
                 break;
       }
 
