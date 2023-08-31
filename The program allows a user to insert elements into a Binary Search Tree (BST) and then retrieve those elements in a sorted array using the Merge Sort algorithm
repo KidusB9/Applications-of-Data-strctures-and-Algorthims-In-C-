@@ -1,0 +1,98 @@
+#The program allows a user to insert elements into a Binary Search Tree (BST) and then retrieve those elements in a sorted array using the Merge Sort algorithm:
+
+
+#include <iostream>
+#include <vector>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class BinarySearchTree {
+public:
+    TreeNode* insert(TreeNode* root, int val) {
+        if (!root) {
+            return new TreeNode(val);
+        }
+        if (val < root->val) {
+            root->left = insert(root->left, val);
+        } else {
+            root->right = insert(root->right, val);
+        }
+        return root;
+    }
+
+    void inorderTraversal(TreeNode* root, std::vector<int>& result) {
+        if (!root) return;
+        inorderTraversal(root->left, result);
+        result.push_back(root->val);
+        inorderTraversal(root->right, result);
+    }
+};
+
+class MergeSort {
+public:
+    void mergeSort(std::vector<int>& nums) {
+        if (nums.size() <= 1) return;
+        std::vector<int> temp(nums.size());
+        mergeSortRec(nums, 0, nums.size() - 1, temp);
+    }
+
+private:
+    void mergeSortRec(std::vector<int>& nums, int left, int right, std::vector<int>& temp) {
+        if (left >= right) return;
+        int mid = left + (right - left) / 2;
+        mergeSortRec(nums, left, mid, temp);
+        mergeSortRec(nums, mid + 1, right, temp);
+        merge(nums, left, mid, right, temp);
+    }
+
+    void merge(std::vector<int>& nums, int left, int mid, int right, std::vector<int>& temp) {
+        int i = left, j = mid + 1, k = left;
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                temp[k++] = nums[i++];
+            } else {
+                temp[k++] = nums[j++];
+            }
+        }
+        while (i <= mid) {
+            temp[k++] = nums[i++];
+        }
+        while (j <= right) {
+            temp[k++] = nums[j++];
+        }
+        for (int i = left; i <= right; i++) {
+            nums[i] = temp[i];
+        }
+    }
+};
+
+int main() {
+    TreeNode* root = NULL;
+    BinarySearchTree bst;
+    std::vector<int> nums = {40, 20, 70, 10, 30, 50, 80};
+
+    // Insert elements into BST
+    for (int num : nums) {
+        root = bst.insert(root, num);
+    }
+
+    nums.clear();
+    bst.inorderTraversal(root, nums); // This will get the numbers in sorted order due to BST's property
+
+    // Now, let's shuffle the nums and then apply merge sort
+    nums = {40, 10, 70, 20, 50, 30, 80};
+    MergeSort sorter;
+    sorter.mergeSort(nums);
+
+    for (int num : nums) {
+        std::cout << num << " ";
+    }
+
+    return 0;
+}
