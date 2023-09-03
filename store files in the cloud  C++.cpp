@@ -111,7 +111,7 @@ int main(int argc, char** argv)
         // Read the progress information from the file
         progress_file.read(reinterpret_cast<char*>(&progress), sizeof(UploadProgress));
 
-        //  for Seeking  the correct position in the input file
+       
         file.seekg(progress.bytes_uploaded);
     } else {
         // Initialize the progress information
