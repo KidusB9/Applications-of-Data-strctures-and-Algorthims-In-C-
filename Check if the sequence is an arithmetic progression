@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+enum ProgressionType {
+    NONE,
+    ARITHMETIC,
+    GEOMETRIC
+};
+
+ProgressionType findProgression(const vector<int>& seq) {
+    if(seq.size() < 2) {
+        return NONE;
+    }
+
+    int d = seq[1] - seq[0]; 
+    double r = (double)seq[1] / seq[0]; 
+
+    bool isArithmetic = true;
+    bool isGeometric = true;
+
+    for(int i = 2; i < seq.size(); i++) {
+        if(seq[i] - seq[i-1] != d) {
+            isArithmetic = false;
+        }
+        if((double)seq[i] / seq[i-1] != r) {
+            isGeometric = false;
+        }
+    }
+
+    if(isArithmetic) {
+        return ARITHMETIC;
+    }
+    if(isGeometric) {
+        return GEOMETRIC;
+    }
+    return NONE;
+}
+
+int main() {
+    vector<int> sequence = {3, 6, 9, 12};
+    ProgressionType result = findProgression(sequence);
+
+    switch(result) {
+        case ARITHMETIC:
+            cout << "The sequence is an arithmetic progression." << endl;
+            break;
+        case GEOMETRIC:
+            cout << "The sequence is a geometric progression." << endl;
+            break;
+        default:
+            cout << "The sequence is neither an arithmetic nor a geometric progression." << endl;
+            break;
+    }
+
+    return 0;
+}
