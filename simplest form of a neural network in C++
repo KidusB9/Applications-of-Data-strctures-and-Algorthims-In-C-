@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+// Define the structure of a single-layer perceptron
+struct Perceptron {
+    vector<double> weights;
+    double bias;
+    double learning_rate;
+
+    Perceptron(int num_inputs, double learning_rate) : learning_rate(learning_rate) {
+        // Initialize weights and bias with random values
+        srand(time(0));
+        for (int i = 0; i < num_inputs; i++) {
+            weights.push_back((double) rand() / RAND_MAX);
+        }
+        bias = (double) rand() / RAND_MAX;
+    }
+
+    // Prediction function
+    int predict(vector<int> inputs) {
+        double sum = bias;
+        for (int i = 0; i < inputs.size(); i++) {
+            sum += weights[i] * inputs[i];
+        }
+        return sum > 0 ? 1 : 0;
+    }
+
+    // Training function
+    void train(vector<vector<int>> inputs, vector<int> labels, int epochs) {
+        for (int e = 0; e < epochs; e++) {
+            int total_error = 0;
+            for (int i = 0; i < inputs.size(); i++) {
+                int prediction = predict(inputs[i]);
+                int error = labels[i] - prediction;
+                total_error += error;
+
+                // Update weights and bias
+                for (int j = 0; j < weights.size(); j++) {
+                    weights[j] += learning_rate * error * inputs[i][j];
+                }
+                bias += learning_rate * error;
+            }
+
+            // Break the loop if the error is zero
+            if (total_error == 0)
+                break;
+        }
+    }
+};
+
+int main() {
+    // Define inputs and labels
+    vector<vector<int>> inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+    vector<int> labels = {0, 0, 0, 1};
+
+    // Initialize a perceptron
+    Perceptron perceptron(inputs[0].size(), 0.1);
+
+    // Train the perceptron
+    perceptron.train(inputs, labels, 100);
+
+    // Make predictions
+    for (auto input : inputs) {
+        cout << perceptron.predict(input) << endl;
+    }
+
+    return 0;
+}
