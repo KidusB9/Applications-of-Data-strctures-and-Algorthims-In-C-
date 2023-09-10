@@ -1,0 +1,53 @@
+#include <iostream>
+#include <tensorflow/cc/client/client_session.h>
+#include <tensorflow/cc/ops/standard_ops.h>
+#include <tensorflow/core/framework/tensor.h>
+
+int main() {
+    using namespace tensorflow;
+    using namespace tensorflow::ops;
+
+    Scope root = Scope::NewRootScope();
+    auto rnn_cell = BasicRNNCell(root, {100});
+
+    // Input tensor of shape [batch_size, time_steps, input_dim]
+    auto input = Placeholder(root, DT_FLOAT);
+    // Initial state of shape [batch_size, state_size]
+    auto initial_state = Placeholder(root, DT_FLOAT);
+
+    // Unstack the input tensor into a list of time_steps tensors of shape [batch_size, input_dim]
+    std::vector<Output> inputs = Unstack(root, input, -1, 0).output;
+
+    std::vector<Output> outputs;
+    Output state = initial_state;
+
+    for (int i = 0; i < inputs.size(); ++i) {
+        // Run the RNN cell with the current input and state
+        auto rnn_out = rnn_cell({inputs[i], state});
+        // Append the output to the list of outputs
+        outputs.push_back(rnn_out.output[0]);
+        // Update the state for the next iteration
+        state = rnn_out.output[1];
+    }
+
+    // Stack the list of outputs into a tensor of shape [batch_size, time_steps, state_size]
+    auto output = Stack(root, outputs, 0);
+
+    ClientSession session(root);
+    std::vector<Tensor> out_tensors;
+
+    // Example input data
+    Tensor input_data(DT_FLOAT, TensorShape({2, 3, 4}));
+    input_data.flat<float>().setRandom();
+
+    Tensor initial_state_data(DT_FLOAT, TensorShape({2, 100}));
+    initial_state_data.flat<float>().setZero();
+
+    // Run the graph
+    TF_CHECK_OK(session.Run({{input, input_data}, {initial_state, initial_state_data}}, {output}, &out_tensors));
+
+    // Print the output
+    std::cout << out_tensors[0].matrix<float>() << std::endl;
+
+    return 0;
+}
