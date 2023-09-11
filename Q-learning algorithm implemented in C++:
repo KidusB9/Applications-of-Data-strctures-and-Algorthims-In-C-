@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+// Number of states and actions
+#define STATES 5
+#define ACTIONS 2
+
+// Learning rate and discount factor
+#define ALPHA 0.1
+#define GAMMA 0.9
+
+// Initialize Q-values
+vector<vector<double>> Q(STATES, vector<double>(ACTIONS, 0.0));
+
+// Rewards matrix
+int R[STATES][ACTIONS] = {
+    {0, -10},
+    {-10, 0},
+    {0, 10},
+    {10, 0},
+    {0, 0}
+};
+
+// Function to choose the next action
+int chooseAction(int state) {
+    int action = 0;
+    if ((double) rand() / RAND_MAX > 0.1) {
+        vector<double>::iterator it = max_element(Q[state].begin(), Q[state].end());
+        action = it - Q[state].begin();
+    } else {
+        action = rand() % ACTIONS;
+    }
+    return action;
+}
+
+// Function to update the Q-values
+void updateQ(int oldState, int action, int reward, int newState) {
+    double maxQNewState = *max_element(Q[newState].begin(), Q[newState].end());
+    Q[oldState][action] += ALPHA * (reward + GAMMA * maxQNewState - Q[oldState][action]);
+}
+
+// Main function
+int main() {
+    srand(time(0));
+
+    // Train for 1000 episodes
+    for (int episode = 0; episode < 1000; episode++) {
+        int state = rand() % STATES;
+        while (state != 4) {
+            int action = chooseAction(state);
+            int reward = R[state][action];
+            int newState = abs(state + pow(-1, action));
+            updateQ(state, action, reward, newState);
+            state = newState;
+        }
+    }
+
+    // Display Q-values
+    for (int i = 0; i < STATES; i++) {
+        for (int j = 0; j < ACTIONS; j++) {
+            cout << Q[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
