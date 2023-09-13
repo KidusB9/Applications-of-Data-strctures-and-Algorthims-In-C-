@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+class SelfImproving {
+public:
+    vector<int> numbers;
+    map<int, int> frequency;
+
+    void fillNumbers(int n) {
+        for(int i = 1; i <= n; i++) {
+            numbers.push_back(i);
+        }
+    }
+
+    void shuffleNumbers() {
+        random_shuffle(numbers.begin(), numbers.end());
+    }
+
+    void countFrequency() {
+        for(int i = 0; i < numbers.size(); i++) {
+            frequency[numbers[i]]++;
+        }
+    }
+
+    void sortNumbers() {
+        sort(numbers.begin(), numbers.end());
+    }
+
+    void printNumbers() {
+        for(int i = 0; i < numbers.size(); i++) {
+            cout << numbers[i] << " ";
+        }
+        cout << endl;
+    }
+
+    void printFrequency() {
+        for(auto it = frequency.begin(); it != frequency.end(); it++) {
+            cout << it->first << ": " << it->second << endl;
+        }
+    }
+};
+
+int main() {
+    SelfImproving si;
+    si.fillNumbers(10);
+    si.shuffleNumbers();
+    si.countFrequency();
+    si.sortNumbers();
+    si.printNumbers();
+    si.printFrequency();
+
+    return 0;
+}
