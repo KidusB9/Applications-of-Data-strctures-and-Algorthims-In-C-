@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to compute the mean of a vector
+double mean(vector<double> v) {
+    double sum = 0;
+    for(int i = 0; i < v.size(); i++) {
+        sum += v[i];
+    }
+    return sum / v.size();
+}
+
+// Function to compute the dot product of two vectors
+double dotProduct(vector<double> v1, vector<double> v2) {
+    double sum = 0;
+    for(int i = 0; i < v1.size(); i++) {
+        sum += v1[i] * v2[i];
+    }
+    return sum;
+}
+
+// Function to compute the linear regression coefficients
+vector<double> linearRegression(vector<double> x, vector<double> y) {
+    double xMean = mean(x);
+    double yMean = mean(y);
+    double xyMean = mean(x) * mean(y);
+    double xSquareMean = mean(x) * mean(x);
+    double xyProductMean = dotProduct(x, y) / x.size();
+    double xProductMean = dotProduct(x, x) / x.size();
+
+    double m = (xyProductMean - xyMean) / (xProductMean - xSquareMean);
+    double b = yMean - m * xMean;
+
+    vector<double> coeffs;
+    coeffs.push_back(m);
+    coeffs.push_back(b);
+
+    return coeffs;
+}
+
+int main() {
+    vector<double> x = {1, 2, 3, 4, 5};
+    vector<double> y = {2, 4, 6, 8, 10};
+
+    vector<double> coeffs = linearRegression(x, y);
+
+    cout << "Coefficients: m = " << coeffs[0] << ", b = " << coeffs[1] << endl;
+
+    return 0;
+}
