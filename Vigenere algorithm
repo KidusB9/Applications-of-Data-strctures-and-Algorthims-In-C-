@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+// Function to decrypt Caesar cipher
+std::string decryptCaesar(const std::string &cipherText, int shift) {
+    std::string decryptedText;
+    for (char c : cipherText) {
+        if (std::isalpha(c)) {
+            char offset = std::isupper(c) ? 'A' : 'a';
+            decryptedText += (char)(((c - offset - shift + 26) % 26) + offset);
+        } else {
+            decryptedText += c;
+        }
+    }
+    return decryptedText;
+}
+
+// Function to decrypt Vigenere cipher
+std::string decryptVigenere(const std::string &cipherText, const std::string &key) {
+    std::string decryptedText;
+    int keyLen = key.length();
+    std::string extendedKey = key;
+
+    // Extend the key to match the length of cipherText
+    while (extendedKey.length() < cipherText.length()) {
+        extendedKey += key;
+    }
+
+    // Decrypt using Vigenere algorithm
+    for (int i = 0; i < cipherText.length(); ++i) {
+        char c = cipherText[i];
+        char k = extendedKey[i];
+        if (std::isalpha(c)) {
+            char offset = std::isupper(c) ? 'A' : 'a';
+            decryptedText += (char)(((c - k + 26) % 26) + offset);
+        } else {
+            decryptedText += c;
+        }
+    }
+    return decryptedText;
+}
+
+int main() {
+    std::string cipherText;
+    std::string choice;
+    std::cout << "Which cipher are you using? (Caesar/Vigenere): ";
+    std::cin >> choice;
+    std::cin.ignore();
+    
+    if (choice == "Caesar") {
+        int shift;
+        std::cout << "Enter the cipher text: ";
+        std::getline(std::cin, cipherText);
+        std::cout << "Enter the shift value: ";
+        std::cin >> shift;
+        std::string decryptedText = decryptCaesar(cipherText, shift);
+        std::cout << "Decrypted Text: " << decryptedText << std::endl;
+    } else if (choice == "Vigenere") {
+        std::string key;
+        std::cout << "Enter the cipher text: ";
+        std::getline(std::cin, cipherText);
+        std::cout << "Enter the key: ";
+        std::cin >> key;
+        std::string decryptedText = decryptVigenere(cipherText, key);
+        std::cout << "Decrypted Text: " << decryptedText << std::endl;
+    } else {
+        std::cout << "Invalid choice." << std::endl;
+    }
+    
+    return 0;
+}
