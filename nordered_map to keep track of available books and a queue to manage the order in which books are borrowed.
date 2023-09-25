@@ -1,0 +1,104 @@
+#include <iostream>
+#include <unordered_map>
+#include <queue>
+#include <string>
+
+class Book {
+public:
+    Book(const std::string& title, int isbn)
+        : title(title), isbn(isbn), borrowed(false) {}
+
+    void markAsBorrowed() {
+        borrowed = true;
+    }
+
+    void markAsReturned() {
+        borrowed = false;
+    }
+
+    bool isBorrowed() const {
+        return borrowed;
+    }
+
+    std::string getTitle() const {
+        return title;
+    }
+
+    int getIsbn() const {
+        return isbn;
+    }
+
+private:
+    std::string title;
+    int isbn;
+    bool borrowed;
+};
+
+class Library {
+public:
+    void addBook(int isbn, const std::string& title) {
+        books[isbn] = Book(title, isbn);
+    }
+
+    bool borrowBook(int isbn) {
+        if (books.find(isbn) == books.end() || books[isbn].isBorrowed()) {
+            return false;
+        }
+        books[isbn].markAsBorrowed();
+        borrowQueue.push(isbn);
+        return true;
+    }
+
+    bool returnBook(int isbn) {
+        if (books.find(isbn) == books.end() || !books[isbn].isBorrowed()) {
+            return false;
+        }
+        books[isbn].markAsReturned();
+        return true;
+    }
+
+    void printBorrowedBooks() {
+        std::cout << "Borrowed Books:" << std::endl;
+        std::queue<int> tempQueue = borrowQueue;
+
+        while (!tempQueue.empty()) {
+            int isbn = tempQueue.front();
+            tempQueue.pop();
+            std::cout << "ISBN: " << isbn << ", Title: " << books[isbn].getTitle() << std::endl;
+        }
+    }
+
+private:
+    std::unordered_map<int, Book> books;
+    std::queue<int> borrowQueue;
+};
+
+int main() {
+    Library myLibrary;
+
+    // Add some books
+    myLibrary.addBook(9781234567890, "The Catcher in the Rye");
+    myLibrary.addBook(9789876543210, "To Kill a Mockingbird");
+
+    // Borrow and return books
+    if (myLibrary.borrowBook(9781234567890)) {
+        std::cout << "Book borrowed successfully." << std::endl;
+    } else {
+        std::cout << "Failed to borrow book." << std::endl;
+    }
+
+    if (myLibrary.returnBook(9781234567890)) {
+        std::cout << "Book returned successfully." << std::endl;
+    } else {
+        std::cout << "Failed to return book." << std::endl;
+    }
+
+    // Borrow again to populate queue
+    myLibrary.borrowBook(9781234567890);
+    myLibrary.borrowBook(9789876543210);
+
+    // Display borrowed books
+    myLibrary.printBorrowedBooks();
+
+    return 0;
+}
