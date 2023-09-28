@@ -54,7 +54,7 @@ int main() {
     int start = 1;
     dijkstra(graph, start, distances);
 
-    cout << "Shortest distances from node " << start << ":\n";
+    cout << "Shortest distances from nodes " << start << ":\n";
     for (const auto& [node, distance] : distances) {
         cout << "Node " << node << ": " << distance << '\n';
     }
