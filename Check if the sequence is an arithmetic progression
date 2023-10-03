@@ -5,7 +5,7 @@ using namespace std;
 enum ProgressionType {
     NONE,
     ARITHMETIC,
-    GEOMETRIC
+    GEOMETRIC,
 };
 
 ProgressionType findProgression(const vector<int>& seq) {
