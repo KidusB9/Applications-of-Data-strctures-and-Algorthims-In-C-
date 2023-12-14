@@ -1,4 +1,4 @@
-#this is an example which i took from my recent projects, can be adjusted and  for the specfic banks and cam be tailrod to their needs.
+//this is an example which i took from my recent projects, can be adjusted and  for the specfic banks and cam be tailrod to their needs.
 #include <iostream>
 #include <unordered_map>
 #include <queue>
