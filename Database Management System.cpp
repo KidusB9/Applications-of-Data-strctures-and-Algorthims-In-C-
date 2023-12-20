@@ -81,4 +81,23 @@ int main() {
     db.createTable("Employees", {"Name", "Position", "Department"});
 
     Table* employees = db.getTable("Employees");
-    if (employees
+    if (employees) {
+        Record rec1;
+        rec1.setField("Name", "John Doe");
+        rec1.setField("Position", "Manager");
+        rec1.setField("Department", "Sales");
+        
+        Record rec2;
+        rec2.setField("Name", "Jane Smith");
+        rec2.setField("Position", "Developer");
+        rec2.setField("Department", "IT");
+
+        employees->insertRecord(rec1);
+        employees->insertRecord(rec2);
+
+        std::cout << "All Employees:" << std::endl;
+        employees->displayAllRecords();
+    }
+
+    return 0;
+}
